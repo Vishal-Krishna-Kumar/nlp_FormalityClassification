@@ -1,4 +1,5 @@
 # NLP Final Project - Formality Classification
+<!-- TODO(candidate): name the course and your teammates, and say which parts you built (the README says "we"). requirements.txt is referenced below but missing. -->
 
 ## Overview
 This project aims to classify the formality of given sentences using various machine learning models. We explore character-based preprocessing techniques and implement multiple models including BiLSTM, DeBerta, BERT, and a simple CNN.
@@ -17,8 +18,8 @@ The project is structured into the following sections:
 ## How to Run
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/Formality-Classification.git
-    cd Formality-Classification
+    git clone https://github.com/Vishal-Krishna-Kumar/nlp_FormalityClassification.git
+    cd nlp_FormalityClassification
     ```
 
 2. **Install dependencies:**
