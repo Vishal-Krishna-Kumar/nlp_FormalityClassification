@@ -1,42 +1,48 @@
-# NLP Final Project - Formality Classification
-<!-- TODO(candidate): name the course and your teammates, and say which parts you built (the README says "we"). requirements.txt is referenced below but missing. -->
+# Formality classification on GYAFC
 
-## Overview
-This project aims to classify the formality of given sentences using various machine learning models. We explore character-based preprocessing techniques and implement multiple models including BiLSTM, DeBerta, BERT, and a simple CNN.
+Course team project (NLP): classify English sentences as **formal** or **informal** and compare four model
+families on the [GYAFC corpus](https://github.com/raosudha89/GYAFC-corpus) (Entertainment & Music domain).
 
-## Dataset
-We utilize the GYAFC Corpus, specifically focusing on the `Entertainment_Music` domain. The dataset is split into training and test sets containing formal and informal sentences.
+Everything is in one notebook: `GYAFC_Corpus_Fomality_Classification.ipynb` (run on Google Colab with a GPU).
 
-## Project Structure
-The project is structured into the following sections:
-1. **Loading the Dataset**
-2. **Preprocessing the Data**
-3. **Training the Models**
-4. **Evaluating the Models**
-5. **Formality Score Calculations**
+## Approach
 
-## How to Run
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/Vishal-Krishna-Kumar/nlp_FormalityClassification.git
-    cd nlp_FormalityClassification
-    ```
+1. **Data:** GYAFC Entertainment & Music train and test splits (formal and informal sentences, labels 1 and 0).
+2. **Preprocessing:** character-level encoding for the BiLSTM and CNN models (lower-casing, character
+   tokenization, padding); WordPiece / SentencePiece tokenizers for the transformer models.
+3. **Models:**
+   - BiLSTM baseline (Keras)
+   - 1D CNN over character embeddings (Keras)
+   - `bert-base-uncased`, fine-tuned for 3 epochs (Hugging Face `Trainer`)
+   - `microsoft/deberta-v3-base`, fine-tuned for 3 epochs (Hugging Face `Trainer`)
+4. **Formality score:** the softmax probability of the "formal" class from the fine-tuned BERT model,
+   shown for 50 test sentences at the end of the notebook.
 
-2. **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Results on the test set (from the notebook outputs)
 
-3. **Run the Jupyter Notebook:**
-    ```bash
-    jupyter notebook NLP_Final_Project_Formality_Classification.ipynb
-    ```
+| Model | Precision | Recall | F1 |
+|---|---|---|---|
+| BiLSTM (character-level) | 0.682 | 0.951 | 0.794 |
+| 1D CNN (character-level) | 0.713 | 0.962 | 0.819 |
 
-## Results
-- **BiLSTM Model:** Achieved a high F1 score but required significant computational resources.
-- **DeBerta Model:** Outperformed the BiLSTM model in terms of accuracy and F1 score, proving to be the most effective model.
-- **BERT Model:** Provided competitive results but was slightly less accurate than DeBerta.
-- **CNN Model:** Offered a simpler alternative with decent performance but did not match the accuracy of DeBerta and BERT.
+The BERT and DeBERTa models were fine-tuned (final training loss 0.551 and 0.175), but the notebook does not
+print their test-set precision, recall or F1, so they are not reported here. Both character-level models
+have high recall and lower precision: they label many informal sentences as formal.
 
-## Conclusion
-The project successfully implements multiple models to classify the formality of sentences. DeBerta emerges as the most effective model, offering high accuracy and efficiency. Further improvements can be made by experimenting with other architectures and fine-tuning techniques.
+## Running it
+
+```bash
+git clone https://github.com/Vishal-Krishna-Kumar/nlp_FormalityClassification.git
+cd nlp_FormalityClassification
+pip install numpy pandas scikit-learn tensorflow torch transformers sentencepiece accelerate
+jupyter notebook GYAFC_Corpus_Fomality_Classification.ipynb
+```
+
+The notebook reads GYAFC from Google Drive; the corpus is distributed by its authors on request, so point the
+loading cell at your own copy.
+
+## Possible next steps
+
+- Report test-set metrics for the fine-tuned BERT and DeBERTa models.
+- Tune the classification threshold to balance precision and recall.
+- Evaluate on the Family & Relationships domain as well.
